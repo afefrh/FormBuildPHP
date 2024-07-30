@@ -7,44 +7,32 @@ use FormBuilder\FormElement;
 final class Form
 {
     private array $elements = [];
-    private bool $isOpen = false;
 
-    public function create(string $action, string $method): self
+    private function __construct(string $action, string $method)
     {
-        if ($this->isOpen) {
-            throw new \Exception("Form open"); 
-        }
-        
         $this->elements[] = sprintf("<form action='%s' method='%s'>", htmlspecialchars($action), htmlspecialchars($method));
-        $this->isOpen = true;
-        return $this;
+    }
+
+    public static function create(string $action, string $method): self
+    {
+        return new self($action, $method);
     }
 
     private function close(): self
     {
-        if ($this->isOpen) {
-            $this->elements[] = "</form>";
-            $this->isOpen = false;
-        }
+        $this->elements[] = "</form>";
         return $this;
     }
 
     public function addElement(FormElement $element): self
     {
-        if (!$this->isOpen) {
-            throw new \Exception("erreur ");
-        }
-
         $this->elements[] = $element;
         return $this;
     }
 
     public function __toString(): string
     {
-        if ($this->isOpen) {
-            $this->close();
-        }
-
-        return implode('', array_map(fn($element) => $element instanceof FormElement ? $element->render() : $element, $this->elements));
+        $this->close();
+        return implode('', array_map(fn ($element) => $element instanceof FormElement ? $element->render() : $element, $this->elements));
     }
 }

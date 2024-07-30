@@ -8,8 +8,7 @@ use FormBuilder\Textarea;
 use FormBuilder\Select;
 use FormBuilder\Label;
 
-$form = new Form();
-$form->create('/submit', 'post')
+$form = Form::create('/submit', 'post')
     ->addElement((new Label('username', 'Username:'))->attr(['class' => 'form-label']))
     ->addElement((new Input('username', 'text'))->attr(['placeholder' => 'Enter username', 'class' => 'form-input']))
     ->addElement((new Label('password', 'Password:'))->attr(['class' => 'form-label']))
